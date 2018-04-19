@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
+public class Player : Character {
 
-	private Rigidbody2D _rb;
 
 	private bool _isJump;
 	
@@ -15,10 +14,6 @@ public class Player : MonoBehaviour {
 	[SerializeField]
 	private float _maxSpeed = 5;
 	
-	void Awake()
-	{
-		_rb = GetComponent<Rigidbody2D>();
-	}
 
 	// Use this for initialization
 	void Start () {
@@ -36,9 +31,11 @@ public class Player : MonoBehaviour {
 		if (_isJump) Jump();
 	}
 	
-	void Move()
+	protected override void Move()
 	{
 		var horizontalMove = Input.GetAxis("Horizontal");
+		if (horizontalMove  > 0 && !_isFacingRight || horizontalMove < 0 && _isFacingRight)
+			ChangeDirection();
 		_rb.AddForce(horizontalMove * Vector2.right * _moveForce);
 		if (Mathf.Abs(_rb.velocity.x) > _maxSpeed )
 			_rb.velocity = new Vector2(Mathf.Sign(_rb.velocity.x) * _maxSpeed, _rb.velocity.y);

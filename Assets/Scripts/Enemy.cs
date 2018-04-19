@@ -2,27 +2,27 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour{
-    private int _id;
-    
+public abstract class Enemy : Character{
+
     [SerializeField]
     private int _point = 20;
 
-    public int Id {
-        get {
-            return _id;
-        }
-        set {
-            _id = value;
-        }
-    }
     
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
         EnemyManager.Instance.Add(this);
+    }
+
+    /// <summary>
+    /// This function is called every fixed framerate frame, if the MonoBehaviour is enabled.
+    /// </summary>
+    void Update()
+    {
+        Move();
     }
 
     /// <summary>
@@ -34,13 +34,16 @@ public class Enemy : MonoBehaviour{
     {
         Player player = other.GetComponent<Player>();
         if (player !=null)
-        {
-            EnemyManager.Instance.Remove(_id);
+        { 
+            if (_hp > 0) _hp--;
+            else 
+                EnemyManager.Instance.Remove(Id);
         }
-    }
-
-    public void DestroySelf() {
-        gameObject.SetActive(false);
+        Edge edge = other.GetComponent<Edge>();
+        if (edge != null)
+        {
+            ChangeDirection();
+        }
     }
 }
 

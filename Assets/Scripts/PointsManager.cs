@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-public class PointsManager : Singleton<PointsManager>, Manager<Point> {
+public class PointsManager : Singleton<PointsManager>, IManager<Point> {
 	private int _id = 0;
 
 	[SerializeField]

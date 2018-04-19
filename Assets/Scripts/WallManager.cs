@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class WallManager : Singleton<WallManager>, Manager<Wall> {
+public class WallManager : Singleton<WallManager>, IManager<Wall> {
 	private int _id = 0;
 
 	[SerializeField]

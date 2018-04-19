@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyManager : Singleton<EnemyManager>, Manager<Enemy>{
+public class EnemyManager : Singleton<EnemyManager>, IManager<Enemy>{
     private int _id = 0;
     [SerializeField]
     private List<Enemy> _enemies = new List<Enemy>();
