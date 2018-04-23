@@ -34,7 +34,7 @@ public class Player : Character {
 	protected override void Move()
 	{
 		var horizontalMove = Input.GetAxis("Horizontal");
-		if (horizontalMove  > 0 && !_isFacingRight || horizontalMove < 0 && _isFacingRight)
+		if (horizontalMove  > 0 && !isFacingRight || horizontalMove < 0 && isFacingRight)
 			ChangeDirection();
 		_rb.AddForce(horizontalMove * Vector2.right * _moveForce);
 		if (Mathf.Abs(_rb.velocity.x) > _maxSpeed )

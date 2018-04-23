@@ -45,5 +45,14 @@ public abstract class Enemy : Character{
             ChangeDirection();
         }
     }
+
+    protected override void Move()
+    {
+        if (isFacingRight) {
+            _rb.MovePosition(_rb.position + Vector2.right * _speed * Time.deltaTime);
+        } else {
+            _rb.MovePosition(_rb.position + Vector2.left * _speed * Time.deltaTime);
+        }
+    }
 }
 

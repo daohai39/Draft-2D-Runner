@@ -12,7 +12,7 @@ public abstract class Character : MonoBehaviour
 	[SerializeField]
 	protected float _speed = 0.05f;
 
-	protected bool _isFacingRight = true;
+	protected bool isFacingRight = true;
 
 	protected Rigidbody2D _rb;
 
@@ -31,19 +31,12 @@ public abstract class Character : MonoBehaviour
 	}
 
 
-    protected virtual void Move()
-    {
-        if (_isFacingRight) {
-            _rb.MovePosition(_rb.position + Vector2.right * _speed * Time.deltaTime);
-        } else {
-            _rb.MovePosition(_rb.position + Vector2.left * _speed * Time.deltaTime);
-        }
-    }
+    protected abstract void Move();
 
 
     protected virtual void ChangeDirection()
     {
-        _isFacingRight = !_isFacingRight;
+        isFacingRight = !isFacingRight;
         transform.localScale = new Vector3(transform.localScale.x * -1, transform.localScale.y,transform.localScale.z);
         Debug.Log("Change Direction");
     }
