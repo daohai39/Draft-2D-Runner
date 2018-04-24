@@ -34,6 +34,10 @@ public class TestPlayer : MonoBehaviour
     private bool airControl;
 
     private bool isFacingRight;
+
+    private float nextTime;
+    [SerializeField]
+    private float shootWait;
     private Animator animator;
 
     public bool Attack {get; set;}
@@ -44,6 +48,9 @@ public class TestPlayer : MonoBehaviour
 
     public bool Sit {get; set;}
     
+    public GameObject bulletPrefab; 
+    public Transform shotSpawn;
+
     public Rigidbody2D Rigidbody { get; set;}
     private void Awake()
     {   
@@ -88,32 +95,18 @@ public class TestPlayer : MonoBehaviour
         return false;
     }
 
-    // Can remove for restructure
-    // private void HandleAttacks()
-    // {
-    //     //if attack && !_isGrounded
-    //     //      set trigger animation Jump Attack
-
-    //     if(Attack && OnGround && !Animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-    //         Animator.SetTrigger("attack");
-    //         Rigidbody.velocity = Vector2.zero;
-    //     }
-    //     if(_jumpAttack && !OnGround && !Animator.GetCurrentAnimatorStateInfo(1).IsName("Jump Attack")) {
-    //         Animator.SetBool("jumpAttack", true);
-    //     }
-    //     if(!_jumpAttack && !Animator.GetCurrentAnimatorStateInfo(1).IsName("Jump Attack")) {
-    //         Animator.SetBool("jumpAttack", false);
-    //     }
-    // }
-
-    //Need improve
     private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Space)) {
             animator.SetTrigger("jump");
         }
         if (Input.GetKeyDown(KeyCode.LeftControl)) {
-            animator.SetTrigger("attack");
+            if (Time.time >= nextTime)
+            {
+                nextTime = Time.time + shootWait;
+                animator.SetTrigger("attack");
+                Shoot();
+            }
         }
         if (Input.GetKey(KeyCode.DownArrow)) {
             animator.SetBool("sit", true);
@@ -143,26 +136,6 @@ public class TestPlayer : MonoBehaviour
             Rigidbody.velocity = new Vector2(horizontal  * speed / 2, Rigidbody.velocity.y);
         }
         animator.SetFloat("speed", Mathf.Abs(horizontal));
-        // if (Rigidbody.velocity.y < 0) {
-        //     Animator.SetBool("landing", true);
-        // }
-        // if (!Animator.GetCurrentAnimatorStateInfo(0).IsTag("Attack")) {
-        //     Rigidbody.velocity = new Vector2(horizontal * speed, Rigidbody.velocity.y);
-        // }
-        // if (OnGround && Jump) {
-        //     OnGround = false;
-        //     Rigidbody.AddForce(new Vector2(0, jumpForce));
-        //     Animator.SetTrigger("jump");
-        // }
-        // if (Sit) {
-        //     Animator.SetBool("sit", true);
-        // } else if (!Sit) {
-        //     Animator.SetBool("sit", false);
-        // }
-        // if (!Jump && OnGround)
-        //     Animator.SetFloat("speed", Mathf.Abs(horizontal));
-        // else 
-        //     Animator.SetFloat("speed", 0.0f);
     }
 
     private void HandleLayers()
@@ -181,6 +154,18 @@ public class TestPlayer : MonoBehaviour
         {
             isFacingRight = !isFacingRight;
             transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
+        }
+    }
+
+    private void Shoot()
+    {
+        if (isFacingRight)
+        {
+            GameObject tmp = Instantiate(bulletPrefab, shotSpawn.position, Quaternion.identity);
+            tmp.GetComponent<Bullet>().Initialize(Vector2.right);
+        } else {
+            GameObject tmp = Instantiate(bulletPrefab, shotSpawn.position, Quaternion.identity);
+            tmp.GetComponent<Bullet>().Initialize(Vector2.left);
         }
     }
 }
