@@ -46,6 +46,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\AttackBehaviour.cs" />
+     <Compile Include="Assets\BoxColliderTrigger.cs" />
+     <Compile Include="Assets\JumpBehaviour.cs" />
+     <Compile Include="Assets\LandBehaviour.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\Edge.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
@@ -61,6 +65,11 @@
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\Wall.cs" />
      <Compile Include="Assets\Scripts\WallManager.cs" />
+     <Compile Include="Assets\SitBehaviour.cs" />
+     <Compile Include="Assets\TestScript\CameraController.cs" />
+     <Compile Include="Assets\TestScript\CollisionTrigger.cs" />
+     <Compile Include="Assets\TestScript\TestEnemy.cs" />
+     <Compile Include="Assets\TestScript\TestPlayer.cs" />
  <Reference Include="UnityEngine.Analytics">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
  </Reference>
