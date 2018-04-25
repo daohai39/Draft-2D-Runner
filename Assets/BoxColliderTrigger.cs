@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class BoxColliderTrigger : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
+	/// <summary>
+	/// Sent when another object enters a trigger collider attached to this
+	/// object (2D physics only).
+	/// </summary>
+	/// <param name="other">The other Collider2D involved in this collision.</param>
+	void OnTriggerEnter2D(Collider2D other)
+	{
+		TestEnemy enemy = other.GetComponent<TestEnemy>();
+		if(enemy!=null)
+		{
+			enemy.ChangeDirection();
+		}
 	}
 	
-	// Update is called once per frame
-	void Update () {
-		
-	}
 }

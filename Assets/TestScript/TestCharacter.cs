@@ -6,9 +6,10 @@ public class TestCharacter : MonoBehaviour {
 	[SerializeField]
 	protected float speed;
 
-	protected bool isFacingRight;
+	[HideInInspector]
+	public bool isFacingRight;
 
-	protected Animator animator;
+	public Animator Animator;
 
 	public bool Attack {get; set;}
 
@@ -16,16 +17,14 @@ public class TestCharacter : MonoBehaviour {
 
 	protected virtual void Awake()
 	{
-		animator = GetComponent<Animator>();
+		isFacingRight = true;
+		Animator = GetComponent<Animator>();
 		Rigidbody = GetComponent<Rigidbody2D>();
 	}
 
-	protected void ChangeDirection(float horizontal)
+	protected void Flip()
 	{
-		if (horizontal > 0 && !isFacingRight || horizontal < 0 && isFacingRight)
-		{
-			isFacingRight = !isFacingRight;
-			transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
-		}
+		isFacingRight = !isFacingRight;
+		transform.localScale = new Vector2(transform.localScale.x * -1, transform.localScale.y);
 	}
 }

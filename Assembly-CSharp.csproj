@@ -69,6 +69,7 @@
      <Compile Include="Assets\TestScript\Bullet.cs" />
      <Compile Include="Assets\TestScript\CameraController.cs" />
      <Compile Include="Assets\TestScript\CollisionTrigger.cs" />
+     <Compile Include="Assets\TestScript\GoThroughOnCollide.cs" />
      <Compile Include="Assets\TestScript\TestCharacter.cs" />
      <Compile Include="Assets\TestScript\TestEnemy.cs" />
      <Compile Include="Assets\TestScript\TestPlayer.cs" />

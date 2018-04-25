@@ -10,6 +10,7 @@ public class AttackBehaviour : StateMachineBehaviour {
 		if (TestPlayer.Instance.OnGround)
 		{
 			TestPlayer.Instance.Rigidbody.velocity = Vector2.zero;
+			TestPlayer.Instance.Shoot();
 		}
 	}
 

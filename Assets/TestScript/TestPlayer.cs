@@ -33,6 +33,7 @@ public class TestPlayer : MonoBehaviour
     [SerializeField]
     private bool airControl;
 
+    [HideInInspector]
     private bool isFacingRight;
 
     private float nextTime;
@@ -105,7 +106,6 @@ public class TestPlayer : MonoBehaviour
             {
                 nextTime = Time.time + shootWait;
                 animator.SetTrigger("attack");
-                Shoot();
             }
         }
         if (Input.GetKey(KeyCode.DownArrow)) {
@@ -157,13 +157,13 @@ public class TestPlayer : MonoBehaviour
         }
     }
 
-    private void Shoot()
+    public void Shoot()
     {
-        if (isFacingRight)
+        if (isFacingRight && Attack)
         {
             GameObject tmp = Instantiate(bulletPrefab, shotSpawn.position, Quaternion.identity);
             tmp.GetComponent<Bullet>().Initialize(Vector2.right);
-        } else {
+        } else if (!isFacingRight && Attack) {
             GameObject tmp = Instantiate(bulletPrefab, shotSpawn.position, Quaternion.identity);
             tmp.GetComponent<Bullet>().Initialize(Vector2.left);
         }
