@@ -71,11 +71,13 @@
      <Compile Include="Assets\States\IEnemyState.cs" />
      <Compile Include="Assets\States\IdleState.cs" />
      <Compile Include="Assets\States\RunState.cs" />
-     <Compile Include="Assets\TestScript\BoxColliderTrigger.cs" />
      <Compile Include="Assets\TestScript\Bullet.cs" />
      <Compile Include="Assets\TestScript\CameraController.cs" />
-     <Compile Include="Assets\TestScript\CollisionTrigger.cs" />
-     <Compile Include="Assets\TestScript\GoThroughOnCollide.cs" />
+     <Compile Include="Assets\TestScript\Components\BoxColliderTrigger.cs" />
+     <Compile Include="Assets\TestScript\Components\CollisionTrigger.cs" />
+     <Compile Include="Assets\TestScript\Components\DeathOnTrigger.cs" />
+     <Compile Include="Assets\TestScript\Components\DectectOnTrigger.cs" />
+     <Compile Include="Assets\TestScript\Components\GoThroughOnCollide.cs" />
      <Compile Include="Assets\TestScript\TestCharacter.cs" />
      <Compile Include="Assets\TestScript\TestEnemy.cs" />
      <Compile Include="Assets\TestScript\TestPlayer.cs" />

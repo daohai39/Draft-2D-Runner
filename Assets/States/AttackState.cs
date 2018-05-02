@@ -4,7 +4,7 @@ public class AttackState : IEnemyState
 {
 	private TestEnemy enemy;
 	private float nextTime;
-	private float waitTime = 5;
+	private float waitTime = 3;
     public void Enter(TestEnemy enemy)
     {
 		this.enemy = enemy;
@@ -12,14 +12,12 @@ public class AttackState : IEnemyState
 
     public void Execute()
     {
-		if(enemy.IsLockOn)
-
-		{
-			enemy.Idle();
-			Attack();
-		}
-		else 
-			enemy.ChangeState(new IdleState());
+			if(enemy.Target != null) {
+				enemy.Idle();
+				Attack();
+			} else { 
+				enemy.ChangeState(new IdleState());
+			}
     }
 
     public void Exit()
@@ -32,7 +30,7 @@ public class AttackState : IEnemyState
 		if (Time.time >= nextTime) {
 			nextTime = Time.time + waitTime;
 			enemy.Animator.SetTrigger("attack");
-			enemy.Shoot();
+			enemy.Engage();
 		}
 	}
 

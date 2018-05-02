@@ -17,7 +17,7 @@ public class RunState : IEnemyState
 		if (Time.time - time >= waitTime)
 		{
 			enemy.ChangeState(new IdleState());
-		} else if (enemy.IsLockOn)
+		} else if (enemy.Target != null)
 		{
 			enemy.ChangeState(new AttackState());
 		}

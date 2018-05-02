@@ -21,10 +21,6 @@ public class Bullet : MonoBehaviour {
 		myRigidbody.velocity = speed * direction;
 	}
 
-	void OnBecameInvisible()
-	{
-		Destroy(gameObject);	
-	}
 
 	public void Initialize(Vector2 direction)
 	{

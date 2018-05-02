@@ -20,6 +20,8 @@ public class TestPlayer : TestCharacter
     [SerializeField]
     private Transform[] groundPositions;
 
+    private SpriteRenderer renderer;
+
     [SerializeField]
     private float groundRadius;
 
@@ -34,11 +36,15 @@ public class TestPlayer : TestCharacter
     [SerializeField]
     private float shootWait;
 
+    [SerializeField]
+    private float immortalTime;
     public bool Jump {get; set;}
 
     public bool OnGround {get; set;}
 
     public bool Sit {get; set;}
+
+    private bool immortal;
     
     public GameObject bulletPrefab; 
     public Transform shotSpawn;
@@ -50,6 +56,12 @@ public class TestPlayer : TestCharacter
         }
     }
 
+
+    protected override void Awake()
+    {
+        base.Awake();
+        renderer = GetComponent<SpriteRenderer>();
+    }
 
     private void Update() 
     {
@@ -113,18 +125,27 @@ public class TestPlayer : TestCharacter
     //Need improve
     private void HandleMovement(float horizontal)
     {
+        //if falling
         if (Rigidbody.velocity.y < 0) 
         {
             Animator.SetBool("landing", true);
         }
+        //if on ground or aircontrol without any action
         if (!Attack && !Sit && (OnGround || airControl))
         {
             Rigidbody.velocity = new Vector2 (horizontal * speed, Rigidbody.velocity.y);
         }
+        // if on ground and press jump
         if (OnGround && Jump) 
         {
             Rigidbody.AddForce(new Vector2(0, jumpForce));
         }
+        // if while jumping
+        if (!OnGround)
+        {
+            Rigidbody.AddForce(new Vector2(horizontal * speed / 4, 0));
+        }
+        // if on ground and press
         if (OnGround && Sit)
         {
             Animator.SetBool("sit", true);
@@ -152,6 +173,17 @@ public class TestPlayer : TestCharacter
         }
     }
 
+    private IEnumerator ImmortalState()
+    {
+        while (immortal)
+        {
+            renderer.enabled = false;
+            yield return new WaitForSeconds(.1f);
+            renderer.enabled = true;
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
     public void Shoot()
     {
         if (isFacingRight && Attack)
@@ -164,14 +196,22 @@ public class TestPlayer : TestCharacter
         }
     }
 
+    
+
     public override IEnumerator TakingDamage()
     {
-        health -= 10;
-        if (!IsDead) {
-			Animator.SetTrigger("damage");
-        } else {
-            Animator.SetTrigger("die");
+        if (!immortal) {
+            health -= 10;
+            if (!IsDead) {
+                Animator.SetTrigger("damage");
+                immortal = true;
+                StartCoroutine(ImmortalState());
+                yield return new WaitForSeconds(immortalTime);
+                immortal = false;
+            } else {
+                Animator.SetLayerWeight(1,0);
+                Animator.SetTrigger("die");
+            }
         }
-        yield return null;
     }
 }

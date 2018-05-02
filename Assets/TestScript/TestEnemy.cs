@@ -6,10 +6,10 @@ public class TestEnemy : TestCharacter {
 	
 	private IEnemyState currentState;
 
-	[HideInInspector]
-	public bool IsLockOn;
     public GameObject bulletPrefab; 
     public Transform shotSpawn;
+
+	public GameObject Target {get; set;}
 
     public override bool IsDead 
 	{
@@ -28,7 +28,7 @@ public class TestEnemy : TestCharacter {
 			if (!TakeDamage) {
 				currentState.Execute();
 			}
-			TargetPlayer();
+			LockOnTarget();
 		}
 	}
 
@@ -63,7 +63,7 @@ public class TestEnemy : TestCharacter {
 		transform.Translate(speed * GetDirection() * Time.deltaTime);
 	}
 
-	public void Shoot()
+	public void Engage()
 	{
 		if (isFacingRight)
         {
@@ -74,21 +74,18 @@ public class TestEnemy : TestCharacter {
             tmp.GetComponent<Bullet>().Initialize(Vector2.left);
         }
 	}
-	public void TargetPlayer()
-	{
-		// declare min distance between player and enemy
-		Vector2 minDistance = new Vector2(10,0);
-		// calculate distance between player and enenmy
-		Vector2 distance = TestPlayer.Instance.transform.position - transform.position;
-		// if player within distance && facing each other 
-		// attack
-		if (minDistance.x >= Mathf.Abs(distance.x) && minDistance.y <= Mathf.Abs(distance.y) - 1)
-			IsLockOn = true;
-		// else reset
-		else 
-			IsLockOn = false;
-	}
 
+	private void LockOnTarget()
+	{
+		if (Target != null)
+		{
+			var xDir = Target.transform.position.x - transform.position.x;
+			if (xDir > 0 && !isFacingRight || xDir < 0 && isFacingRight)
+			{
+				Flip();
+			}
+		}
+	}
 	public void ChangeDirection() 
 	{
 		Flip();
