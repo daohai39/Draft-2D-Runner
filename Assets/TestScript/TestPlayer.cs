@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class TestPlayer : MonoBehaviour
+public class TestPlayer : TestCharacter
 {
     private static TestPlayer instance;
     public static TestPlayer Instance {
@@ -13,7 +13,6 @@ public class TestPlayer : MonoBehaviour
              return instance;
         }
     }
-
     
     [SerializeField]
     private LayerMask whatIsGround;
@@ -24,24 +23,16 @@ public class TestPlayer : MonoBehaviour
     [SerializeField]
     private float groundRadius;
 
-    [SerializeField] 
-    private float speed;
-
     [SerializeField]
     private float jumpForce;
 
     [SerializeField]
     private bool airControl;
 
-    [HideInInspector]
-    private bool isFacingRight;
-
     private float nextTime;
+
     [SerializeField]
     private float shootWait;
-    private Animator animator;
-
-    public bool Attack {get; set;}
 
     public bool Jump {get; set;}
 
@@ -52,13 +43,13 @@ public class TestPlayer : MonoBehaviour
     public GameObject bulletPrefab; 
     public Transform shotSpawn;
 
-    public Rigidbody2D Rigidbody { get; set;}
-    private void Awake()
-    {   
-        isFacingRight = true;
-        Rigidbody = GetComponent<Rigidbody2D>();
-        animator = GetComponent<Animator>();
+    public override bool IsDead 
+    {
+        get {
+            return health <= 0;
+        }
     }
+
 
     private void Update() 
     {
@@ -67,14 +58,18 @@ public class TestPlayer : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var horizontal = Input.GetAxis("Horizontal");
-        OnGround = IsGrounded();
+        if (IsDead) return;
+        if (!TakeDamage)
+        {
+            var horizontal = Input.GetAxis("Horizontal");
+            OnGround = IsGrounded();
 
-        HandleMovement(horizontal);
+            HandleMovement(horizontal);
 
-        ChangeDirection(horizontal);
-        //Handle animation layers
-        HandleLayers();
+            ChangeDirection(horizontal);
+            //Handle animation layers
+            HandleLayers();
+        }
     }
 
     private bool IsGrounded()
@@ -99,19 +94,19 @@ public class TestPlayer : MonoBehaviour
     private void HandleInput()
     {
         if (Input.GetKeyDown(KeyCode.Space)) {
-            animator.SetTrigger("jump");
+            Animator.SetTrigger("jump");
         }
         if (Input.GetKeyDown(KeyCode.LeftControl)) {
             if (Time.time >= nextTime)
             {
                 nextTime = Time.time + shootWait;
-                animator.SetTrigger("attack");
+                Animator.SetTrigger("attack");
             }
         }
         if (Input.GetKey(KeyCode.DownArrow)) {
-            animator.SetBool("sit", true);
+            Animator.SetBool("sit", true);
         } else if (!Input.GetKey(KeyCode.DownArrow)) {
-            animator.SetBool("sit", false);
+            Animator.SetBool("sit", false);
         }
     }
     
@@ -120,7 +115,7 @@ public class TestPlayer : MonoBehaviour
     {
         if (Rigidbody.velocity.y < 0) 
         {
-            animator.SetBool("landing", true);
+            Animator.SetBool("landing", true);
         }
         if (!Attack && !Sit && (OnGround || airControl))
         {
@@ -132,19 +127,19 @@ public class TestPlayer : MonoBehaviour
         }
         if (OnGround && Sit)
         {
-            animator.SetBool("sit", true);
+            Animator.SetBool("sit", true);
             Rigidbody.velocity = new Vector2(horizontal  * speed / 2, Rigidbody.velocity.y);
         }
-        animator.SetFloat("speed", Mathf.Abs(horizontal));
+        Animator.SetFloat("speed", Mathf.Abs(horizontal));
     }
 
     private void HandleLayers()
     {
         if (!OnGround) {
-            animator.SetLayerWeight(1,1);
+            Animator.SetLayerWeight(1,1);
         }
         else {
-            animator.SetLayerWeight(1,0);
+            Animator.SetLayerWeight(1,0);
         }
     }
 
@@ -167,5 +162,16 @@ public class TestPlayer : MonoBehaviour
             GameObject tmp = Instantiate(bulletPrefab, shotSpawn.position, Quaternion.identity);
             tmp.GetComponent<Bullet>().Initialize(Vector2.left);
         }
+    }
+
+    public override IEnumerator TakingDamage()
+    {
+        health -= 10;
+        if (!IsDead) {
+			Animator.SetTrigger("damage");
+        } else {
+            Animator.SetTrigger("die");
+        }
+        yield return null;
     }
 }

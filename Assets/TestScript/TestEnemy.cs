@@ -2,129 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public interface IEnemyState 
-{
-	void Execute();
-	void Enter(TestEnemy enemy);
-	void Exit();
-}
-
-public class AttackState : IEnemyState
-{
-	private TestEnemy enemy;
-	private float nextTime;
-	private float waitTime = 5;
-    public void Enter(TestEnemy enemy)
-    {
-		this.enemy = enemy;
-    }
-
-    public void Execute()
-    {
-		if(enemy.IsLockOn)
-		{
-			enemy.Idle();
-			Attack();
-		}
-		else 
-			enemy.ChangeState(new IdleState());
-    }
-
-    public void Exit()
-    {
-		enemy.Animator.ResetTrigger("attack");
-    }
-
-	private void Attack()
-	{
-		if (Time.time >= nextTime) {
-			nextTime = Time.time + waitTime;
-			enemy.Animator.SetTrigger("attack");
-			enemy.Shoot();
-		}
-	}
-
-}
-
-public class IdleState : IEnemyState
-{
-	private TestEnemy enemy;
-	private float waitTime = 3;
-	private float time;
-    public void Enter(TestEnemy enemy)
-    {
-		this.enemy = enemy;	
-		time = Time.time;
-    }
-
-    public void Execute()
-    {
-		enemy.Idle();
-		if (Time.time - time >= waitTime)
-		{
-			enemy.ChangeState(new RunState());
-		} else if (enemy.IsLockOn)
-		{
-			enemy.ChangeState(new AttackState());
-		}
-
-	}
-
-    public void Exit()
-    {
-		time = 0;
-    }
-
-}
-
-public class RunState : IEnemyState
-{
-	private TestEnemy enemy;
-	private float waitTime = 10;
-	private float time;
-    public void Enter(TestEnemy enemy)
-    {
-		this.enemy = enemy;
-		time = Time.time;
-    }
-
-    public void Execute()
-    {
-		enemy.Run();
-		if (Time.time - time >= waitTime)
-		{
-			enemy.ChangeState(new IdleState());
-		} else if (enemy.IsLockOn)
-		{
-			enemy.ChangeState(new AttackState());
-		}
-    }
-
-    public void Exit()
-    {
-		time = 0;
-    }
-
-}
-
 public class TestEnemy : TestCharacter {
 	
 	private IEnemyState currentState;
 
 	[HideInInspector]
-	public bool IsLockOn = false;
+	public bool IsLockOn;
     public GameObject bulletPrefab; 
     public Transform shotSpawn;
 
-	protected override void Awake() {
+    public override bool IsDead 
+	{
+		get {
+			return health <= 0;
+		}	
+	}
+
+    protected override void Awake() {
 		base.Awake();
 		ChangeState(new IdleState());
 	}
 	
 	void Update () {
-		currentState.Execute();
-		
-		TargetPlayer();
+		if (!IsDead) {
+			if (!TakeDamage) {
+				currentState.Execute();
+			}
+			TargetPlayer();
+		}
 	}
 
 	private Vector2 GetDirection()
@@ -188,4 +93,16 @@ public class TestEnemy : TestCharacter {
 	{
 		Flip();
 	}
+
+    public override IEnumerator TakingDamage()
+    {
+		health -= 10;
+		if (!IsDead) {
+			Animator.SetTrigger("damage");
+		} else {
+			Animator.SetTrigger("die");
+		}
+			yield return null;
+    }
+	
 }

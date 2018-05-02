@@ -47,10 +47,11 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\AnimationBehaviours\AttackBehaviour.cs" />
+     <Compile Include="Assets\AnimationBehaviours\DeathBehaviour.cs" />
      <Compile Include="Assets\AnimationBehaviours\JumpBehaviour.cs" />
      <Compile Include="Assets\AnimationBehaviours\LandBehaviour.cs" />
      <Compile Include="Assets\AnimationBehaviours\SitBehaviour.cs" />
-     <Compile Include="Assets\BoxColliderTrigger.cs" />
+     <Compile Include="Assets\AnimationBehaviours\TakeDamageBehaviour.cs" />
      <Compile Include="Assets\Scripts\Character.cs" />
      <Compile Include="Assets\Scripts\Edge.cs" />
      <Compile Include="Assets\Scripts\Enemy.cs" />
@@ -66,6 +67,11 @@
      <Compile Include="Assets\Scripts\Singleton.cs" />
      <Compile Include="Assets\Scripts\Wall.cs" />
      <Compile Include="Assets\Scripts\WallManager.cs" />
+     <Compile Include="Assets\States\AttackState.cs" />
+     <Compile Include="Assets\States\IEnemyState.cs" />
+     <Compile Include="Assets\States\IdleState.cs" />
+     <Compile Include="Assets\States\RunState.cs" />
+     <Compile Include="Assets\TestScript\BoxColliderTrigger.cs" />
      <Compile Include="Assets\TestScript\Bullet.cs" />
      <Compile Include="Assets\TestScript\CameraController.cs" />
      <Compile Include="Assets\TestScript\CollisionTrigger.cs" />
